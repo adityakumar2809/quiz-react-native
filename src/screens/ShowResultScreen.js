@@ -5,7 +5,7 @@ import { Text } from 'react-native-elements';
 const ShowResultScreen = () => {
     return (
         <View>
-            <Text h3>Show Result Screen</Text>
+            <Text h3>Your Performance</Text>
         </View>
     );
 };

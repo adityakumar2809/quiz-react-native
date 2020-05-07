@@ -1,12 +1,20 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Text } from 'react-native-elements';
+import { StyleSheet } from 'react-native';
+import { Text, Button } from 'react-native-elements';
+import { SafeAreaView } from 'react-navigation';
 
-const EndScreen = () => {
+import Spacer from '../components/Spacer';
+
+const EndScreen = ({ navigation }) => {
     return (
-        <View>
-            <Text h3>End Screen</Text>
-        </View>
+        <SafeAreaView forceInset={{ top: 'always' }}>
+            <Spacer>
+                <Button
+                    title="See Results"
+                    onPress={() => { navigation.navigate('ShowResult') }}
+                />
+            </Spacer>
+        </SafeAreaView>
     );
 };
 

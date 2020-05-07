@@ -12,6 +12,7 @@ import ShowResultScreen from './src/screens/ShowResultScreen';
 import { setNavigator } from './src/navigationRef';
 import { Provider as RequestProvider } from './src/context/RequestContext';
 import { Provider as QuestionProvider } from './src/context/QuestionContext';
+import { Provider as GameProvider } from './src/context/GameContext';
 
 const stackNavigator =  createStackNavigator({
   Start: StartScreen,
@@ -35,10 +36,12 @@ const App =  createAppContainer(stackNavigator);
 
 export default () => {
   return (
-    <QuestionProvider>
-      <RequestProvider>
-        <App ref={(navigator) => { setNavigator(navigator) }}/>
-      </RequestProvider>
-    </QuestionProvider>
+    <GameProvider>
+      <QuestionProvider>
+        <RequestProvider>
+          <App ref={(navigator) => { setNavigator(navigator) }}/>
+        </RequestProvider>
+      </QuestionProvider>
+    </GameProvider>
   );
 };
