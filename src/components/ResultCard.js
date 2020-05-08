@@ -22,9 +22,11 @@ const ResultCard = ( {question, answer, response, status} ) => {
                 </View>
                 <View style={{...styles.borderStyle, flex:1, justifyContent:'center'}}>
                     <Text>{
-                            status
+                            status == 1
                             ?<FontAwesome name='check' size={20} style={{color: 'green'}}/>
-                            :<FontAwesome name='close' size={20} style={{color: 'red'}}/>
+                            : status == -1
+                              ? <FontAwesome name='close' size={20} style={{color: 'red'}}/>
+                              : <FontAwesome name='circle-o' size={20} style={{color: 'orange'}} />
                         }
                     </Text>
                 </View>

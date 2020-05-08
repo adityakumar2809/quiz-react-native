@@ -25,6 +25,7 @@ const stackNavigator =  createStackNavigator({
   defaultNavigationOptions: {
     title: 'Quiz Trivia',
     headerTitleAlign: 'center',
+    headerLeft: () => null,
     headerStyle: {
       backgroundColor: '#30c39e',
       height: 100
