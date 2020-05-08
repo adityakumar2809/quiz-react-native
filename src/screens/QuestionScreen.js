@@ -18,14 +18,13 @@ const QuestionScreen = ({ navigation }) => {
         getNextQuestion(QuestionContextData.state, state.index);
     },[])
 
-    console.log(state);
 
     return (
         <SafeAreaView forceInset={{top:'always'}}>
             <Spacer>
                 <Text h4>Question {state.index + 1}</Text>
                 <Spacer>
-                    <Text>{state.question}</Text>
+                    <Text>{decodeURIComponent(state.question)}</Text>
                 </Spacer>
                 <FlatList 
                     data={state.options}
@@ -33,7 +32,7 @@ const QuestionScreen = ({ navigation }) => {
                     renderItem={({item, index}) => {
                         return(
                             <CheckBox 
-                                title={item}
+                                title={decodeURIComponent(item)}
                                 checked={checkBox[index]}
                                 checkedIcon='dot-circle-o'
                                 uncheckedIcon='circle-o'

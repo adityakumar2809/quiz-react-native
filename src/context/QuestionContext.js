@@ -15,10 +15,11 @@ const getQuestions = (dispatch) => {
     return( async (difficulty, category, setIsLoading) => {
         const response = await triviaApi.get('/api.php', { 
             params: {
-                amount: '3', 
+                amount: '10', 
                 category: category, 
                 difficulty: difficulty, 
-                type: 'multiple'
+                type: 'multiple',
+                encode: 'url3986'
             }
         });
         setIsLoading(false);

@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, ScrollView, StyleSheet, FlatList } from 'react-native';
 import { Text } from 'react-native-elements';
 
 import { Context as GameContext } from '../context/GameContext';
 import { Context as QuestionContext } from '../context/QuestionContext';
+import ResultCard from '../components/ResultCard';
+import Spacer from '../components/Spacer';
 
 const ShowResultScreen = () => {
 
@@ -23,23 +25,39 @@ const ShowResultScreen = () => {
         }
     }
 
+    const listHeader = () => {
+        return (
+            <View style={{ backgroundColor: '#FAFAFA' }}>
+                <Text h3>Your Performance</Text>
+                <Spacer />
+                <Text h4>Score: {score}/{QuestionContextData.state.length}</Text>
+                <Spacer />
+            </View>
+        );
+    }
+
 
     return (
         <View>
-            <Text h3>Your Performance</Text>
-            <Text>Score: {score}/{QuestionContextData.state.length}</Text>
-            <Text>Question --- Correct Answer --- Your Response -- Evaluation</Text>
-            <FlatList
-                data={state.responses}
-                keyExtractor={(item) => item}
-                renderItem={({ item, index }) => {
-                    return (
-                        <Text>
-                            {QuestionContextData.state[index].question} --- {QuestionContextData.state[index].correct_answer} --- {item} --- {result[index]?'true':'false'}
-                        </Text>
-                    );
-                }}
-            />
+            <Spacer>
+                <FlatList
+                    data={state.responses}
+                    keyExtractor={(item) => item}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <ResultCard
+                                question={QuestionContextData.state[index].question}
+                                answer={QuestionContextData.state[index].correct_answer}
+                                response={item}
+                                status={result[index]}
+                            />
+                        );
+                    }}
+                    showsVerticalScrollIndicator={false}
+                    ListHeaderComponent={listHeader}
+                    stickyHeaderIndices={[0]}
+                />
+            </Spacer>
         </View>
     );
 };

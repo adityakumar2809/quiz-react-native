@@ -29,6 +29,7 @@ const stackNavigator =  createStackNavigator({
       backgroundColor: '#30c39e',
       height: 100
     },
+    cardStyle: { backgroundColor: '#FAFAFA' },
   }
 });
 
