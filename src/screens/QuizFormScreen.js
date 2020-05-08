@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-navigation'
-import { Dropdown } from 'react-native-material-dropdown';
+import {Picker} from '@react-native-community/picker';
 
 import Spacer from '../components/Spacer';
 import {Context as RequestContext} from '../context/RequestContext';
@@ -32,17 +32,27 @@ const QuizFormScreen = () => {
         <SafeAreaView>
             <Spacer>
                 <Text h4>Choose wisely</Text>
-                <Dropdown
-                    label="Choose Difficulty"
-                    data={difficulty_data}
-                    onChangeText={(value) => { setSelectedOptions(value, category) }}
-                />
+                <Spacer>
+                <Picker 
+                    selectedValue={difficulty ? difficulty : null}
+                    onValueChange={(itemValue, itemIndex) => {
+                        setSelectedOptions(itemValue, category);
+                    }}
+                >
+                    <Picker.Item label="---- Select Difficulty ----" value={null} key="select_difficulty"/>
+                    { difficulty_data.map((difficulty_object) => <Picker.Item label={difficulty_object.label} value={difficulty_object.value} key={difficulty_object.value} />) }
+                </Picker>
                 <Spacer/>
-                <Dropdown
-                    label="Choose Category"
-                    data={category_data}
-                    onChangeText={(value) => { setSelectedOptions(difficulty, value) }}
-                />
+                <Picker 
+                    selectedValue={category ? category : null}
+                    onValueChange={(itemValue, itemIndex) => {
+                        setSelectedOptions(difficulty, itemValue);
+                    }}
+                >
+                    <Picker.Item label="---- Select Category ----" value={null} key="select_category"/>
+                    { category_data.map((category_object) => <Picker.Item label={category_object.label} value={category_object.value} key={category_object.value} />) }
+                </Picker>
+                </Spacer>
                 <Spacer>
                     {
                         isLoading

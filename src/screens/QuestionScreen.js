@@ -19,11 +19,9 @@ const QuestionScreen = ({ navigation }) => {
 
 
     useEffect(() => {
-        console.log('inside switch before set')
         if (flag!=1) {
             setFlag(1);
         }
-        console.log('inside switch after set')
         switch(difficulty){
             case 'easy':
                 setTimer(10);

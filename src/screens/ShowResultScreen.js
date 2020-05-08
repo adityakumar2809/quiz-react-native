@@ -17,8 +17,9 @@ const ShowResultScreen = ({navigation}) => {
     let score_pos = 0;
     let score_neg = 0;
 
+    console.log(QuestionContextData.state.length)
 
-    for (let i = 0; i < state.responses.length; i++) {
+    for (let i = 0; i < QuestionContextData.state.length; i++) {
         if (state.responses[i] === QuestionContextData.state[i].correct_answer) {
             result = [...result, 1];
             score += 1;
@@ -65,14 +66,14 @@ const ShowResultScreen = ({navigation}) => {
         <View>
             <Spacer>
                 <FlatList
-                    data={state.responses}
-                    keyExtractor={(item) => item}
+                    data={QuestionContextData.state}
+                    keyExtractor={(item) => item.correct_answer}
                     renderItem={({ item, index }) => {
                         return (
                             <ResultCard
-                                question={QuestionContextData.state[index].question}
-                                answer={QuestionContextData.state[index].correct_answer}
-                                response={item.includes('undefined')?'---Skipped---':item.includes('missing')?'---Missing---':item}
+                                question={item.question}
+                                answer={item.correct_answer}
+                                response={state.responses[index].includes('undefined')?'---Skipped---':state.responses[index].includes('missing')?'---Missing---':state.responses[index]}
                                 status={result[index]}
                             />
                         );
