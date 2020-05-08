@@ -26,7 +26,9 @@ const ResultCard = ( {question, answer, response, status} ) => {
                             ?<FontAwesome name='check' size={20} style={{color: 'green'}}/>
                             : status == -1
                               ? <FontAwesome name='close' size={20} style={{color: 'red'}}/>
-                              : <FontAwesome name='circle-o' size={20} style={{color: 'orange'}} />
+                              : status == 2
+                                ? <FontAwesome name='minus' size={20} style={{color: 'gray'}} />
+                                : <FontAwesome name='circle-o' size={20} style={{color: 'orange'}} />
                         }
                     </Text>
                 </View>

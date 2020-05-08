@@ -5,23 +5,55 @@ import { SafeAreaView } from 'react-navigation';
 
 import { Context as QuestionContext } from '../context/QuestionContext';
 import { Context as GameContext } from '../context/GameContext';
+import { Context as RequestContext } from '../context/RequestContext';
 import Spacer from '../components/Spacer';
 
 const QuestionScreen = ({ navigation }) => {
 
     const QuestionContextData = useContext(QuestionContext);
-    const { cleanGameData, getNextQuestion, updateResponses, state } = useContext(GameContext);
+    const { setTimer, startTimer, stopTimer, cleanGameData, getNextQuestion, updateResponses, gameTimeOut, state } = useContext(GameContext);
+    const { state: {selected_options: { difficulty }} } = useContext(RequestContext);
 
     const [checkBox, setCheckBox] = useState([false, false, false, false]);
+    const [flag, setFlag] = useState(0);
+
 
     useEffect(() => {
+        console.log('inside switch before set')
+        if (flag!=1) {
+            setFlag(1);
+        }
+        console.log('inside switch after set')
+        switch(difficulty){
+            case 'easy':
+                setTimer(10);
+                break;
+            case 'medium':
+                setTimer(45);
+                break;
+            case 'hard':
+                setTimer(60);
+                break;
+            default:
+                cleanGameData();
+                navigation.navigate('QuestionForm')
+        }
+        startTimer();
         getNextQuestion(QuestionContextData.state, state.index);
     },[])
+
+
+    if(state.timer == 0 && flag == 1){
+        gameTimeOut(QuestionContextData.state.length, (f) => {setFlag(f)}); 
+    }
 
 
     return (
         <SafeAreaView forceInset={{top:'always'}}>
             <Spacer>
+                <Text style={{fontWeight:'bold', marginBottom: 5}}>
+                    Time Left => 00:{state.timer>9 ? `${state.timer}` : `0${state.timer}`}
+                </Text>
                 <Text h4>Question {state.index + 1}</Text>
                 <Spacer>
                     <Text>{decodeURIComponent(state.question)}</Text>
@@ -62,6 +94,7 @@ const QuestionScreen = ({ navigation }) => {
                                         onPress={() => { 
                                             updateResponses(state.index, checkBox.indexOf(true));
                                             setCheckBox([false, false, false, false]);
+                                            stopTimer();
                                             navigation.navigate('End');
                                         }}
                                     />
@@ -90,6 +123,7 @@ const QuestionScreen = ({ navigation }) => {
                                     onPress={() => {
                                         updateResponses(state.index, -1);
                                         setCheckBox([false, false, false, false]);
+                                        stopTimer();
                                         navigation.navigate('End'); 
                                     }}
                                 />

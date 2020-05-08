@@ -25,6 +25,8 @@ const ShowResultScreen = ({navigation}) => {
             score_pos += 1;
         } else if (state.responses[i].includes('undefined')){
             result = [...result, 0];
+        }else if (state.responses[i].includes('missing')){
+            result = [...result, 2];
         }else {
             result = [...result, -1];
             score -= 1;
@@ -70,7 +72,7 @@ const ShowResultScreen = ({navigation}) => {
                             <ResultCard
                                 question={QuestionContextData.state[index].question}
                                 answer={QuestionContextData.state[index].correct_answer}
-                                response={item.includes('undefined')?'---Skipped---':item}
+                                response={item.includes('undefined')?'---Skipped---':item.includes('missing')?'---Missing---':item}
                                 status={result[index]}
                             />
                         );
