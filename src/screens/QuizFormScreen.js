@@ -8,8 +8,9 @@ import Spacer from '../components/Spacer';
 import {Context as RequestContext} from '../context/RequestContext';
 import {Context as QuestionContext} from '../context/QuestionContext';
 
-const QuizFormScreen = () => {
+const QuizFormScreen = ({navigation}) => {
 
+    const err = navigation.getParam('err')
 
     const { 
         state: { 
@@ -54,11 +55,15 @@ const QuizFormScreen = () => {
                 </Picker>
                 </Spacer>
                 <Spacer>
+                    {err ? <Text style={{color:'red'}}>{err}</Text>: null}
+                </Spacer>
+                <Spacer>
                     {
                         isLoading
                         ?   <Button
                                 title="Loading button"
                                 loading={true}
+                                buttonStyle={styles.buttonStyle}
                             /> 
                         :   !category || !difficulty 
                             ?   <Button 
@@ -71,14 +76,25 @@ const QuizFormScreen = () => {
                                         setIsLoading(true);
                                         getQuestions(difficulty, category, (status)=>{setIsLoading(status)});
                                     }}
+                                    buttonStyle={styles.buttonStyle}
                                 /> 
                     }
+                </Spacer>
+                <Spacer>
+                    <Text style={{fontWeight: 'bold'}}>Instructions</Text>
+                    <Text style={{marginBottom:5}}>1. You would get 10 questions in the quiz</Text>
+                    <Text style={{marginBottom:5}}>2. Time Limit for Easy, Meduim and Difficult mode are 30, 45, 60 seconds respectively</Text>
+                    <Text style={{marginBottom:5}}>3. Correct Answers gives +1, Wrong Answers give -1 and skipped questions give 0 to your score</Text>
                 </Spacer>
             </Spacer>
         </SafeAreaView>
     );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    buttonStyle: {
+        backgroundColor: '#30C39E'
+    }
+});
 
 export default QuizFormScreen;

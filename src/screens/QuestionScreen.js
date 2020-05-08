@@ -15,16 +15,12 @@ const QuestionScreen = ({ navigation }) => {
     const { state: {selected_options: { difficulty }} } = useContext(RequestContext);
 
     const [checkBox, setCheckBox] = useState([false, false, false, false]);
-    const [flag, setFlag] = useState(0);
 
 
     useEffect(() => {
-        if (flag!=1) {
-            setFlag(1);
-        }
         switch(difficulty){
             case 'easy':
-                setTimer(10);
+                setTimer(30);
                 break;
             case 'medium':
                 setTimer(45);
@@ -41,9 +37,11 @@ const QuestionScreen = ({ navigation }) => {
     },[])
 
 
-    if(state.timer == 0 && flag == 1){
-        gameTimeOut(QuestionContextData.state.length, (f) => {setFlag(f)}); 
-    }
+    useEffect(() => {
+        if(state.gameTimedOut){
+            navigation.navigate('End');
+        }
+      }, [state.gameTimedOut]);
 
 
     return (
@@ -95,6 +93,7 @@ const QuestionScreen = ({ navigation }) => {
                                             stopTimer();
                                             navigation.navigate('End');
                                         }}
+                                        buttonStyle={styles.buttonStyle}
                                     />
 
                             :   checkBox.indexOf(true) == -1
@@ -109,6 +108,7 @@ const QuestionScreen = ({ navigation }) => {
                                             setCheckBox([false, false, false, false]);
                                             getNextQuestion(QuestionContextData.state, state.index); 
                                         }}
+                                        buttonStyle={styles.buttonStyle}
                                     />
                             
                         }
@@ -124,6 +124,7 @@ const QuestionScreen = ({ navigation }) => {
                                         stopTimer();
                                         navigation.navigate('End'); 
                                     }}
+                                    buttonStyle={styles.buttonStyle}
                                 />
                             :   <Button 
                                     title="Skip"
@@ -132,6 +133,7 @@ const QuestionScreen = ({ navigation }) => {
                                         setCheckBox([false, false, false, false]);
                                         getNextQuestion(QuestionContextData.state, state.index); 
                                     }}
+                                    buttonStyle={styles.buttonStyle}
                                 />
                         }
                     </Spacer>
@@ -140,8 +142,9 @@ const QuestionScreen = ({ navigation }) => {
                             title='Restart'
                             onPress={() => {
                                 cleanGameData();
-                                navigation.navigate('QuizForm');
+                                navigation.navigate('QuizForm', null);
                             }}
+                            buttonStyle={styles.buttonStyle}
                         />
                     </Spacer>
                 </View>
@@ -151,6 +154,10 @@ const QuestionScreen = ({ navigation }) => {
 };
 
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    buttonStyle: {
+        backgroundColor: '#30C39E'
+    }
+});
 
 export default QuestionScreen;

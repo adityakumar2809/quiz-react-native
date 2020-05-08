@@ -23,6 +23,10 @@ const getQuestions = (dispatch) => {
             }
         });
         setIsLoading(false);
+        if(response.data.response_code != 0){
+            navigate('QuizForm', {err: 'Data for given choice is unavailable. Kindly select a different setting'})
+            return;
+        }
         dispatch({type: 'get_questions', payload: response.data.results});
         navigate('Question', null);  
     })

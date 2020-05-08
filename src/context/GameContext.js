@@ -1,24 +1,29 @@
 import createDataContext from './createDataContext';
-import { navigate } from '../navigationRef';
 
 const gameReducer = (state, action) => {
     switch (action.type) {
         case 'clean_game_data':
-            if(state.intervalId){
+            if (state.intervalId) {
                 clearInterval(state.intervalId);
             }
-            return { index: -1, question: '', options: [], answer: '', responses: [] , timer: 0, intervalId: null};
+            return { index: -1, question: '', options: [], answer: '', responses: [], timer: 0, intervalId: null, gameTimedOut: null };
         case 'set_timer':
-            return {...state, timer: action.payload};
+            return { ...state, timer: action.payload };
         case 'start_timer':
-            if(state.timer == 0){
+            if (state.timer == 0) {
                 clearInterval(state.intervalId);
-                return {...state, timer: 0, intervalId: null};
+
+                let arr1 = state.responses;
+                arr1[state.index] = `missing_${state.index}`
+                for (let i = 0; i < (10 - state.index - 1); i++) {
+                    arr1 = [...arr1, `missing_${state.index + i + 1}`]
+                }
+                return { ...state, timer: 0, intervalId: null, responses: arr1, gameTimedOut: true };
             }
-            return {...state, timer: state.timer - 1, intervalId: action.payload }
+            return { ...state, timer: state.timer - 1, intervalId: action.payload }
         case 'stop_timer':
             clearInterval(state.intervalId);
-            return {...state, timer: 0, intervalId: null};
+            return { ...state, timer: 0, intervalId: null };
         case 'get_next_question':
             return {
                 ...state,
@@ -30,20 +35,12 @@ const gameReducer = (state, action) => {
             };
         case 'update_responses':
             let arr = state.responses;
-            if(action.payload.optionIndex != -1){
+            if (action.payload.optionIndex != -1) {
                 arr[action.payload.question_index] = state.options[action.payload.optionIndex];
             } else {
                 arr[action.payload.question_index] = `undefined_${action.payload.question_index}`;
             }
             return { ...state, responses: arr };
-        case 'game_time_out':
-            let arr1 = state.responses;
-            arr1[state.index] = `missing_${state.index}`
-            for(let i=0; i<(action.payload - state.index - 1); i++){
-                arr1 = [...arr1, `missing_${state.index + i + 1}`]
-            }
-            console.log(arr1);
-            return { ...state, responses: arr1 };
         default:
             return state;
     }
@@ -51,21 +48,21 @@ const gameReducer = (state, action) => {
 
 const startTimer = (dispatch) => {
     return (() => {
-        const intervalId = setInterval(()=>{
-            dispatch({type: 'start_timer', payload: intervalId});
+        const intervalId = setInterval(() => {
+            dispatch({ type: 'start_timer', payload: intervalId });
         }, 1000);
     })
 };
 
 const stopTimer = (dispatch) => {
-    return(() => {
-        dispatch({type: 'stop_timer'})
+    return (() => {
+        dispatch({ type: 'stop_timer' })
     })
 };
 
 const setTimer = (dispatch) => {
     return ((interval) => {
-        dispatch({type: 'set_timer', payload: interval});
+        dispatch({ type: 'set_timer', payload: interval });
     })
 };
 
@@ -95,18 +92,11 @@ const updateResponses = (dispatch) => {
     })
 };
 
-const gameTimeOut = (dispatch) => {
-    return ((questions_length, setflag) => {
-        setflag(0);
-        dispatch({ type: 'game_time_out', payload: questions_length });
-        navigate('End', null);
-    })
-};
 
 
 export const { Provider, Context } = createDataContext(
     gameReducer,
-    { setTimer, startTimer, stopTimer, cleanGameData, getNextQuestion, updateResponses, gameTimeOut },
+    { setTimer, startTimer, stopTimer, cleanGameData, getNextQuestion, updateResponses },
     {
         index: -1,
         question: '',
@@ -114,6 +104,7 @@ export const { Provider, Context } = createDataContext(
         answer: '',
         responses: [],
         timer: 0,
-        intervalId: null
+        intervalId: null,
+        gameTimedOut: null
     }
 );
